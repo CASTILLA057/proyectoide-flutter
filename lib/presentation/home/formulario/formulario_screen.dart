@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:proyectoide/config/theme/app_theme.dart';
+import 'package:proyectoide/providers/color_provider.dart';
 
 class FormularioScreen extends StatefulWidget {
   const FormularioScreen({super.key});
@@ -62,14 +65,14 @@ class _FormularioScreenState extends State<FormularioScreen> {
   }
 }
 
-class _FormCustom extends StatefulWidget {
+class _FormCustom extends ConsumerStatefulWidget {
   const _FormCustom();
 
   @override
-  State<_FormCustom> createState() => _FormCustomState();
+  ConsumerState<_FormCustom> createState() => _FormCustomState();
 }
 
-class _FormCustomState extends State<_FormCustom> {
+class _FormCustomState extends ConsumerState<_FormCustom> {
 
   final _formController = GlobalKey<FormState>();
   String cellPhone = "";
@@ -87,6 +90,7 @@ class _FormCustomState extends State<_FormCustom> {
 
   @override
   Widget build(BuildContext context) {
+    final colorselect = ref.watch(colorProvider);
     return Form(
       key: _formController,
       child: Column(children: [
@@ -143,6 +147,23 @@ class _FormCustomState extends State<_FormCustom> {
                 title: Text("Music pop"),
                 value: "pop",
               ),
+            ],
+          ),
+        ),
+        Text("Seleccionar color"),
+        RadioGroup<int>(
+          groupValue: colorselect,
+          onChanged: (value) {
+            ref.read(colorProvider.notifier).changeColor(value!);
+          },
+          child: Column(
+            children: [
+              for (var i = 0; i < colorList.length; i++)
+                RadioListTile<int>(
+                  title: Text("Color $i"),
+                  value: i,
+                  activeColor: colorList[i],
+                ),
             ],
           ),
         ),
